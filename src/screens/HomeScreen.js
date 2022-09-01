@@ -1,90 +1,198 @@
-import {View, Text, StatusBar, StyleSheet, PermissionsAndroid, CameraRoll} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  StatusBar,
+  FlatList,
+} from 'react-native';
+import React, { Component } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
-import React, {useEffect, useState} from 'react';
-import {Button} from 'react-native-paper';
+import CropScreen from './CropScreen';
 
-const HomeScreen = ({navigation}) => {
+class HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileList: [],
+    };
+  }
 
-    const [nodes, getNodes] = useState();
+  componentDidMount() {
+    // this.props.navigation.setOptions({
+    //   title: 'Home',
+    // });
+  }
 
-    useEffect(() => {
-      checkPermission()
-      .then(() => {
-        getPhotos()
+  onDelete = (id) => {
+    console.log("OnDelete Called ....", id)
+    const arrList = this.state.fileList;
+    const arr = this.state.fileList.filter(item => item.id !== id);
+    console.log(arrList);
+    // filter(function (item) {
+    //   return item.id !== id;
+    // });
+    this.setState({ fileList: arr });
+  };
+
+
+  // delete = this.onDelete.call;
+
+  // renderItem({item}) {
+  //   return (
+  //     <View style={{justifyContent: 'center', alignItems: 'center'}}>
+  //       <TouchableOpacity
+  //       // onPress={() => onClickItem(item, index)}
+  //       // onLongPress={() => handleLongPress(item, index)}
+  //       >
+  //         <View style={{padding: 8}}>
+  //           <Image source={item.url} style={styles.itemImage} />
+  //           <View>
+  //             <TouchableOpacity
+  //               style={styles.buttonStyle}
+  //               activeOpacity={1.5}
+  //               onPress={
+  //                 this.props
+  //                 }>
+  //               <Image
+  //                 source={require('../images/delete.png')}
+  //                 style={styles.imageStyle}
+  //               />
+  //               <Text style={styles.textStyle}>Delete</Text>
+  //             </TouchableOpacity>
+  //           </View>
+  //         </View>
+  //       </TouchableOpacity>
+  //       {/* <CropScreen item={this.state} /> */}
+  //     </View>
+  //   );
+  // }
+
+  takePhotoFromCamera = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+    }).then(image => {
+      this.onSelectedImage(image);
+    });
+  };
+
+  onSelectedImage = image => {
+    let newDataImg = [...this.state.fileList];
+
+    const source = { uri: image.path };
+    let item = {
+      id: this.state.fileList.length + 1,
+      url: source,
+    };
+    // console.log(this.onDelete);
+    newDataImg.push(item);
+    this.setState({ fileList: newDataImg });
+  }
+
+  renderItem = ({ item }) => {
+    // console.log(item.id);
+    return (
+      <CropScreen item={item} onDelete={this.onDelete} />
+    );
+  }
+
+  componentDidUpdate(image) {
+    // this.setState({
+    //   fileList: [],
+    // });
+
+    // this.state({
+    //   onSelectedImage
+    // });
+
+    const choosePhotoFromLibrary = () => {
+      ImagePicker.openPicker({
+        width: 300,
+        height: 400,
       })
-    }, [])
-    
-
-    const checkPermission  = async () => {
-        const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
-
-        if (hasPermission) {
-            return true
-        }
-
-        const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, {
-            title: "Camera App",
-            message: "Camera App needs your permission to access your photos",
-            buttonPositive: "Yes"
-        });
-
-        return status === 'granted';
-    }
-    const openCam = () => {
-        ImagePicker.openCamera({
-          width: 300,
-          height: 400,
-          cropping: true,
-        }).then(image => {
-          console.log(image);
-        });
-      }
-    
-      const openGallery = () => {
-        ImagePicker.openPicker({
-          multiple: true
-        }).then(images => {
-          console.log(images);
-        });
-      }
-
-      const getPhotos = async() => {
-        const photos = await CameraRoll.getPhotos({
-            first: 10
+        .then(image => {
+          this.onSelectedImage(image);
         })
-        }
+        .catch(error => {
+          if (error.code === 'E_PICKER_CANCELLED') {
+            alert('Error in uploading image from gallery');
+            return false;
+          }
+        });
+    };
+  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={{color: 'black', fontSize: 20}}> Open Camera</Text>
-      <StatusBar backgroundColor="white" />
-      <View style={{marginTop: 10}}>
-        <Button
-          icon="camera"
-          mode="contained"
-          onPress={openCam}>
-          Camera
-        </Button>
+  componentWillUnmount() {
+    this.state.fileList;
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <StatusBar backgroundColor="white" />
+        <FlatList
+          numColumns={3}
+          data={this.state.fileList}
+          renderItem={this.renderItem}
+        />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity
+            style={styles.viewData}
+            onPress={() => this.takePhotoFromCamera()}>
+            <Text>Camera</Text>
+          </TouchableOpacity>
+
+          {/* <TouchableOpacity
+          style={styles.viewData}
+          onPress={() => choosePhotoFromLibrary()}>
+          <Text>Gallery</Text>
+        </TouchableOpacity> */}
+        </View>
+        {/* <CropScreen fileList={this.state} /> */}
       </View>
-      <Text style={{color: 'black', fontSize: 20, marginTop: 20}}> Open Gallery</Text>
-      <View style={{marginTop: 10}}>
-        <Button
-          icon="camera"
-          mode="contained"
-          onPress={() => navigation.navigate('Display')}>
-          Gallery
-        </Button>
-      </View>
-    </View>
-  )
+    );
+  }
 }
 
-export default HomeScreen
+export default HomeScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    }
-})
+  container: {
+    flex: 1,
+  },
+  viewData: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    width: 150,
+    borderRadius: 30,
+    height: 45,
+    elevation: 10,
+    backgroundColor: '#7a1f5c',
+  },
+  itemImage: {
+    height: 100,
+    width: 100,
+  },
+  imageStyle: {
+    padding: 10,
+    margin: 5,
+    height: 25,
+    width: 25,
+    resizeMode: 'stretch',
+  },
+  textStyle: {
+    color: 'black',
+  },
+  buttonStyle: {
+    width: 100,
+    height: 100,
+  },
+});

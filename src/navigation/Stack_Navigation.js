@@ -8,7 +8,7 @@ const Stack_Navigation = () => {
     const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Display">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name='Display' component={DisplayScreen} options={{ title: 'Camera App' }}/>
       </Stack.Navigator>
