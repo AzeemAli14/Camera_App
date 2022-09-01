@@ -3,11 +3,10 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Image,
   StatusBar,
   FlatList,
 } from 'react-native';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
 import CropScreen from './CropScreen';
 
@@ -26,7 +25,7 @@ class HomeScreen extends Component {
   }
 
   onDelete = (id) => {
-    console.log("OnDelete Called ....",id)
+    console.log("OnDelete Called ....", id)
     const arrList = this.state.fileList;
     const arr = this.state.fileList.filter(item => item.id !== id);
     console.log(arrList);
@@ -36,8 +35,8 @@ class HomeScreen extends Component {
     this.setState({ fileList: arr });
   };
 
-  
-// delete = this.onDelete.call;
+
+  // delete = this.onDelete.call;
 
   // renderItem({item}) {
   //   return (
@@ -81,22 +80,22 @@ class HomeScreen extends Component {
   onSelectedImage = image => {
     let newDataImg = [...this.state.fileList];
 
-    const source = {uri: image.path};
+    const source = { uri: image.path };
     let item = {
       id: this.state.fileList.length + 1,
       url: source,
     };
     // console.log(this.onDelete);
     newDataImg.push(item);
-    this.setState({fileList: newDataImg});
+    this.setState({ fileList: newDataImg });
   }
 
-  renderItem = ({item}) => {
+  renderItem = ({ item }) => {
     // console.log(item.id);
     return (
       <CropScreen item={item} onDelete={this.onDelete} />
-      );
-    }
+    );
+  }
 
   componentDidUpdate(image) {
     // this.setState({

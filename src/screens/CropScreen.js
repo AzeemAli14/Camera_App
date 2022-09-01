@@ -1,9 +1,9 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { Component } from 'react'
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { Component } from 'react';
 
 class CropScreen extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     // this.state = {
     //   item: null
@@ -11,7 +11,7 @@ class CropScreen extends Component {
     // this.props = {
     //   item: 0
     // }
-    console.log("Props are: ",this.props.onDelete)
+    console.log('Props are: ', this.props.onDelete);
   }
 
   // console.log("")
@@ -23,14 +23,14 @@ class CropScreen extends Component {
 
   //   // onDelete = this.props.onDelete;
   // }
-    // onDelete = id = {
-    //   // console.log("onDelete called")
-    //   let arr = this.state.fileList;
-    //   let arrList = arr.filter(item => {
-    //     return item.id !== id;
-    //   });
-    //   this.setState({ FileList: arrList });
-    // }
+  // onDelete = id = {
+  //   // console.log("onDelete called")
+  //   let arr = this.state.fileList;
+  //   let arrList = arr.filter(item => {
+  //     return item.id !== id;
+  //   });
+  //   this.setState({ FileList: arrList });
+  // }
 
   //   onDelete = id => {
   //   const arrList = this.props.fileList
@@ -42,12 +42,12 @@ class CropScreen extends Component {
 
   render() {
     return (
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity
         // onPress={() => onClickItem(item, index)}
         // onLongPress={() => handleLongPress(item, index)}
         >
-          <View style={{padding: 8}}>
+          <View style={{ padding: 8 }}>
             <Image source={this.props.item.url} style={styles.itemImage} />
             <View>
               <TouchableOpacity
@@ -64,26 +64,13 @@ class CropScreen extends Component {
           </View>
         </TouchableOpacity>
       </View>
-    )
+    );
   }
 }
 
-export default CropScreen
+export default CropScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  viewData: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10,
-    width: 150,
-    borderRadius: 30,
-    height: 45,
-    elevation: 10,
-    backgroundColor: '#7a1f5c',
-  },
   itemImage: {
     height: 100,
     width: 100,
